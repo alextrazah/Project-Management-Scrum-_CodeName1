@@ -1,0 +1,92 @@
+<html>
+<head>
+        
+
+</head>
+
+<body>
+
+
+
+
+<p>Date : {{ 'now' | date("m/d/Y") }}</p>
+<p>Product owner : {{app.user.username}}</p>
+
+<h2>Le Backlog produit du projet selectioné</h2>
+
+
+
+
+<table border="1" >
+        <thead>
+        <tr>
+                <th>num feature</th>
+                <th>feature</th>
+                <th>num user story</th>
+                <th>user story</th>
+                <th>prio</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+
+                {% for UserStoryBacklogProduit in a %}
+
+
+ <td> {{ UserStoryBacklogProduit.id_backlog_feature }}</td>
+                <td> {{ UserStoryBacklogProduit.feature }}</td>
+                <td> {{ UserStoryBacklogProduit.id_user_story_backlog_produit }}</td>
+                <td> {{ UserStoryBacklogProduit.user_story_bp }}</td>
+                <td> {{ UserStoryBacklogProduit.priority_bp }}</td>
+
+
+
+
+        </tr>
+        {%  endfor %}
+
+        </tbody>
+
+
+
+</table>
+
+
+
+
+<img  src="C:\wamp64\www\int\web\back\app-assets\images\logo.png"/>
+
+        </body>
+        </html>
+
+controller:
+$snappy = $this->get('knp_snappy.pdf');
+
+
+            $user = $this->getUser()->getUsername();
+            $sql =  "select id_backlog_feature, feature,id_user_story_backlog_produit,user_story_bp,priority_bp from Backlog_Produit inner join user_story_backlog_produit on  Backlog_Produit.id_backlog_feature=user_story_backlog_produit.ide_backlog_feat  inner join  projets  on projets.id_projet=Backlog_Produit.ide_projet INNER join fos_user on projets.ide_product_owner=fos_user.id WHERE fos_user.username='$user'";
+
+
+            $params[':dom'] = $user;
+            $em = $this->getDoctrine()->getManager();
+            $stmt = $em->getConnection()->prepare($sql);
+            $stmt->execute($params);
+            $a = $stmt->fetchAll();
+
+
+
+
+            $html = $this->renderView('@BP\backlogpd\pdf.html.twig', array( 'a'=>$a));
+            $filename = 'myFirstSnappyPDF';
+
+            return new Response(
+                $snappy->getOutputFromHtml($html),
+                200,
+                array(
+
+                    'Content-Type'          => 'application/pdf',
+                    'Content-Disposition'   => 'inline; filename="'.$filename.'.pdf"',
+
+                )
+            );
