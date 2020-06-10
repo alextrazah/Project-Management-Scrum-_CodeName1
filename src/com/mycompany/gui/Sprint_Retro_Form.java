@@ -75,7 +75,7 @@ public class Sprint_Retro_Form extends SideMenuBaseFormSM{
                // initGuiBuilderComponents(res);
                FontImage arrowDown = FontImage.createMaterial(FontImage.MATERIAL_KEYBOARD_ARROW_DOWN, "Label", 3);
                for(int i=0;i<k;i++){
-                       addButtonBottom(res,arrowDown, retro.get(i).getDescription(), 0x5ae29d, true,i,username,id,retro.get(i).getId_sprint_retrospective(),img);
+                       addButtonBottom(res,arrowDown, retro.get(i).getDescription(), 0x5ae29d, true,i,username,id,retro.get(i).getId_sprint_retrospective(),img);//les sprints
                        
                }
 
@@ -86,7 +86,7 @@ public class Sprint_Retro_Form extends SideMenuBaseFormSM{
         
        
         
-        FloatingActionButton fab  = FloatingActionButton.createFAB(FontImage.MATERIAL_ADD);
+        FloatingActionButton fab  = FloatingActionButton.createFAB(FontImage.MATERIAL_ADD);//+
         RoundBorder rb = (RoundBorder)fab.getUnselectedStyle().getBorder();
          
         rb.uiid(true);
@@ -245,6 +245,14 @@ public class Sprint_Retro_Form extends SideMenuBaseFormSM{
     protected void showForm4(Resources res) {
                 new Sprint_review_Form(res, img1, username1, id1).show();
 
+    }
+
+    @Override
+    protected void calendrier(Resources res) {
+    }
+
+    @Override
+    protected void List_demandes(Resources res) {
     }
     
 }

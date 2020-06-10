@@ -7,8 +7,10 @@ package com.mycompany.gui;
 
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Button;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
@@ -54,9 +56,9 @@ public Sprint_retro_afficher(Resources res, int x,Form f,String username,int idu
         ArrayList<Sprint_retrospective> retro1 = srvr.getRetro(username);
          getContentPane().setScrollVisible(false);
          
-         TextField nomsprint = new TextField(""+retro1.get(x).getDescription());
+        TextField nomsprint = new TextField(""+retro1.get(x).getDescription());
         nomsprint.setUIID("TextFieldBlack");
-        addStringValue("Sprint", nomsprint);
+        addStringValue("Sprint          :", nomsprint);
         
         TextField equipe = new TextField(""+retro1.get(x).getNom_equipe());
         equipe.setUIID("TextFieldBlack");
@@ -64,27 +66,58 @@ public Sprint_retro_afficher(Resources res, int x,Form f,String username,int idu
         
         TextField projet = new TextField(""+retro1.get(x).getNom_projet());
         projet.setUIID("TextFieldBlack");
-        addStringValue("Nom Projet", projet);
+        addStringValue("Nom Projet :", projet);
          
          TextField tfusernamee = new TextField(""+retro1.get(x).getDate_sprint_retrospective());
         tfusernamee.setUIID("TextFieldBlack");
-        addStringValue("Date", tfusernamee);
+        addStringValue("Date            :", tfusernamee);
         
        
         TextField desc = new TextField(""+retro1.get(x).getDescription_TODO());
         desc.setUIID("TextFieldBlack");
-        addStringValue("Description", desc);
+        addStringValue("Description :", desc);
 FontImage arrowDown2 = FontImage.createMaterial(FontImage.MATERIAL_DELETE, "Label", 5);
+FontImage arrowDown3 = FontImage.createMaterial(FontImage.MATERIAL_EDIT, "Label", 5);
                 Button delete = new Button("Delete");
         delete.setUIID("DeleteButton");
         delete.setIcon(arrowDown2);
         add(delete);
         
+        Button modifier = new Button("Modifier");
+        modifier.setUIID("SaveButton");
+        modifier.setIcon(arrowDown3);
+        add(modifier);
+        
+        modifier.addActionListener(new ActionListener() {
+     @Override
+     public void actionPerformed(ActionEvent evt) {
+         
+         
+          Sprint_retrospective sp = new Sprint_retrospective();
+         int id = sp.getId_sprint_retrospective();
+
+         sp.setDate_sprint_retrospective(tfusernamee.getText());
+         sp.setDescription_TODO(desc.getText());
+        sp.setId_sprint_retrospective(id);
+         
+              srvr.modifretro(sp, idu);         
+              new Sprint_Retro_Form(res, img1, username1, id1).show();
+     }
+ });
+        
         delete.addActionListener(new ActionListener() {
      @Override
      public void actionPerformed(ActionEvent evt) {
-        srvr.delete(idu);
-         refreshTheme();
+        
+if( srvr.getInstance().delete(idu)){
+                            Dialog.show("Success","Sprint Retrospective supprimer",new Command("OK"));
+                        
+                               new Sprint_Retro_Form(res, img1, username1, id1).show();
+}
+                        else
+                            Dialog.show("ERROR", "Server error", new Command("OK"));
+         
+         
          
      }
  });
@@ -113,7 +146,7 @@ FontImage arrowDown2 = FontImage.createMaterial(FontImage.MATERIAL_DELETE, "Labe
                         FlowLayout.encloseIn(menuButton),
                         BorderLayout.west(
                                 BoxLayout.encloseY(
-                                    new Label("Absneces", "Title"),
+                                    new Label("Sprint Retrospective", "Title"),
                                     new Label("connected as "+username, "SubTitle")
                                 )
                             )
@@ -198,6 +231,14 @@ FontImage arrowDown2 = FontImage.createMaterial(FontImage.MATERIAL_DELETE, "Labe
     protected void showForm4(Resources res) {
                 new Sprint_review_Form(res, img1, username1, id1).show();
 
+    }
+
+    @Override
+    protected void calendrier(Resources res) {
+    }
+
+    @Override
+    protected void List_demandes(Resources res) {
     }
     
 }

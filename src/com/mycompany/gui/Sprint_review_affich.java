@@ -10,8 +10,10 @@ import com.codename1.io.ConnectionRequest;
 import com.codename1.io.rest.Response;
 import com.codename1.io.rest.Rest;
 import com.codename1.ui.Button;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
@@ -34,6 +36,7 @@ import com.mycompany.myapp.services.ServiceSprint_review;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
+import com.teknikindustries.bulksms.SMS;
 
 /**
  *
@@ -67,19 +70,19 @@ public class Sprint_review_affich extends SideMenuBaseFormSM{
          
          TextField nomsprint = new TextField(""+review.get(x).getDescription());
         nomsprint.setUIID("TextFieldBlack");
-        addStringValue("Sprint", nomsprint);
+        addStringValue("Sprint                 :", nomsprint);
         
         TextField equipe = new TextField(""+review.get(x).getNom_equipe());
         equipe.setUIID("TextFieldBlack");
-        addStringValue("Nom Equipe", equipe);
+        addStringValue("Nom Equipe      :", equipe);
         
         TextField projet = new TextField(""+review.get(x).getNom_projet());
         projet.setUIID("TextFieldBlack");
-        addStringValue("Nom Projet", projet);
+        addStringValue("Nom Projet        :", projet);
         
         TextField po = new TextField(""+review.get(x).getUsername());
         po.setUIID("TextFieldBlack");
-        addStringValue("Nom po", po);
+        addStringValue("Nom Po              :", po);
         
          TextField r1 = new TextField(""+review.get(x).getRemarque_review_equipe());
         r1.setUIID("TextFieldBlack");
@@ -87,28 +90,78 @@ public class Sprint_review_affich extends SideMenuBaseFormSM{
         
          TextField r2 = new TextField(""+review.get(x).getRemarque_review_product_owner());
         r2.setUIID("TextFieldBlack");
-        addStringValue("Remarque po", r2);
+        addStringValue("Remarque Po    :", r2);
          
          TextField tfusernamee = new TextField(""+review.get(x).getDate_sprint_review());
         tfusernamee.setUIID("TextFieldBlack");
-        addStringValue("Date", tfusernamee);
+        addStringValue("Date                   :", tfusernamee);
         
        
         
 FontImage arrowDown2 = FontImage.createMaterial(FontImage.MATERIAL_DELETE, "Label", 5);
+FontImage arrowDown3 = FontImage.createMaterial(FontImage.MATERIAL_EDIT, "Label", 5);
+FontImage arrowDown4 = FontImage.createMaterial(FontImage.MATERIAL_SEND, "Label", 5);
+
+
                 Button delete = new Button("Delete");
         delete.setUIID("DeleteButton");
         delete.setIcon(arrowDown2);
         add(delete);
         
-      
+       Button modifier = new Button("Modifier");
+        modifier.setUIID("SaveButton");
+        modifier.setIcon(arrowDown3);
+        add(modifier);
+        
+        modifier.addActionListener(new ActionListener() {
+     @Override
+     public void actionPerformed(ActionEvent evt) {
+         
+         
+          Sprint_review sr = new Sprint_review();
+         int id = sr.getId_sprint_review();
+
+         sr.setDate_sprint_review(tfusernamee.getText());
+         sr.setRemarque_review_equipe(r1.getText());
+                  sr.setRemarque_review_product_owner(r2.getText());
+
+         
+        sr.setId_sprint_review(id);
+         
+              srsr.modifreview(sr, idu);         
+        new Sprint_review_Form(res, img1, username1, id1).show();
+     }
+ });
         
         delete.addActionListener(new ActionListener() {
      @Override
      public void actionPerformed(ActionEvent evt) {
-        srsr.delete(idu);
-         refreshTheme();
-         new Sprint_review_Form(res, img1, username1, id1).show();
+       if( srsr.getInstance().delete(idu)){
+                            Dialog.show("Success","Sprint Review supprimer",new Command("OK"));
+                        
+         new Sprint_review_Form(res, img1, username1, id1).show();}
+                        else
+                            Dialog.show("ERROR", "Server error", new Command("OK"));
+       
+         
+     }
+ });
+        
+         TextField tnumero = new TextField("");
+        tnumero.setUIID("TextFieldBlack");
+        addStringValue("Numero", tnumero);
+       Button loginButton3 = new Button("Envoyer");
+        loginButton3.setUIID("ModiferButton");
+                loginButton3.setIcon(arrowDown4);
+
+        add(loginButton3);
+        loginButton3.addActionListener(new ActionListener() {
+     @Override
+     public void actionPerformed(ActionEvent evt) {
+         /*SMS sms = new SMS();
+                            String nt = "+216" + tnumero.getText();
+                            sms.SendSMS("hajerk", "Hajer123", "votre rendez_vous est le  " + tfusernamee.getText()+"", nt, "https://bulksms.vsms.net/eapi/submission/send_sms/2/2.0");*/
+                            
          
      }
  });
@@ -126,7 +179,7 @@ FontImage arrowDown2 = FontImage.createMaterial(FontImage.MATERIAL_DELETE, "Labe
                         FlowLayout.encloseIn(menuButton),
                         BorderLayout.west(
                                 BoxLayout.encloseY(
-                                    new Label("Sprints review", "Title"),
+                                    new Label("Sprint Review", "Title"),
                                     new Label("connected as "+username, "SubTitle")
                                 )
                             )
@@ -239,6 +292,14 @@ if(result.getResponseData() != null) {
     @Override
     protected void showForm4(Resources res) {
         new Sprint_review_Form(res, img1, username1, id1).show();
+    }
+
+    @Override
+    protected void calendrier(Resources res) {
+    }
+
+    @Override
+    protected void List_demandes(Resources res) {
     }
     
     

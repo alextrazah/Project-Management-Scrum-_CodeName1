@@ -130,4 +130,20 @@ public class ServiceSprint_retro {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOK;
     }
+   
+   
+   public void modifretro(Sprint_retrospective t, int id ) {
+        ConnectionRequest con = new ConnectionRequest();// création d'une nouvelle demande de connexion
+                String url = Statics.BASE_URL + "/Meeting/modif/" +id+ "/" +t.getDescription_TODO()+ "/" +t.getDate_sprint_retrospective()+"";
+
+        con.setUrl(url);// Insertion de l'URL de notre demande de connexion
+
+        con.addResponseListener((e) -> {
+            String str = new String(con.getResponseData());//Récupération de la réponse du serveur
+            System.out.println(str);//Affichage de la réponse serveur sur la console
+
+        });
+        NetworkManager.getInstance().addToQueueAndWait(con);// Ajout de notre demande de connexion à la file d'attente du NetworkManager
+    }
+   
 }

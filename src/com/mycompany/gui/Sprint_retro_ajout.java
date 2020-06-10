@@ -7,8 +7,10 @@ package com.mycompany.gui;
 
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Button;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
@@ -57,7 +59,7 @@ public class Sprint_retro_ajout extends SideMenuBaseFormSM{
          getContentPane().setScrollVisible(false);
          TextField tsprint = new TextField("");
         tsprint.setUIID("TextFieldBlack");
-        addStringValue("Sprint", tsprint);
+        addStringValue("Sprint          :", tsprint);
         
        TextField tequipe = new TextField("");
         tequipe.setUIID("TextFieldBlack");
@@ -65,15 +67,15 @@ public class Sprint_retro_ajout extends SideMenuBaseFormSM{
         
         TextField tprojet = new TextField("");
         tprojet.setUIID("TextFieldBlack");
-        addStringValue("Nom Projet", tprojet);
+        addStringValue("Nom Projet :", tprojet);
         
         Picker tDate = new Picker();
         tDate.setUIID("TextFieldBlack");
-        addStringValue2("Date", tDate);
+        addStringValue2("Date            :", tDate);
         
           TextField tdesc = new TextField("");
         tdesc.setUIID("TextFieldBlack");
-        addStringValue("Description", tdesc);
+        addStringValue("Description :", tdesc);
         
         
         
@@ -95,8 +97,29 @@ public class Sprint_retro_ajout extends SideMenuBaseFormSM{
          
          String datef=(new SimpleDateFormat("yyyy-MM-dd")).format(tDate.getDate());
         Sprint_retrospective sp = new Sprint_retrospective(tdesc.getText(), datef, tequipe.getText(), tprojet.getText(), tsprint.getText());
-         srvr.addTask(sp);
-        new Sprint_Retro_Form(res, img, username, id).show();
+         //srvr.addTask(sp);
+        
+        
+        
+        if ((tsprint.getText().length()==0)||(tequipe.getText().length()==0)||(tprojet.getText().length()==0)||(tdesc.getText().length()==0))
+                    Dialog.show("Alert", "Les champs ne sont pas remplis", new Command("OK"));
+                else
+                {
+                    try {
+                        //srva.addTask(a);
+                        if( srvr.getInstance().addTask(sp)){
+                            Dialog.show("Success","Sprint Retrospective ajouté",new Command("OK"));
+                        
+                   new Sprint_Retro_Form(res, img, username, id).show();}
+                        else
+                            Dialog.show("ERROR", "Server error", new Command("OK"));
+                    } catch (NumberFormatException e) {
+                        Dialog.show("ERROR", "Status must be a number", new Command("OK"));
+                    }
+                    
+                }
+        
+        
      }
  });
 
@@ -200,6 +223,14 @@ public class Sprint_retro_ajout extends SideMenuBaseFormSM{
     protected void showForm4(Resources res) {
                 new Sprint_review_Form(res, img1, username1, id1).show();
 
+    }
+
+    @Override
+    protected void calendrier(Resources res) {
+    }
+
+    @Override
+    protected void List_demandes(Resources res) {
     }
     
 }

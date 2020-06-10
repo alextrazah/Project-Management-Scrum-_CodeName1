@@ -71,11 +71,7 @@ public class Sprint_review_Form extends SideMenuBaseFormSM{
        
                // initGuiBuilderComponents(res);
                FontImage arrowDown = FontImage.createMaterial(FontImage.MATERIAL_KEYBOARD_ARROW_DOWN, "Label", 3);
-               for(int i=0;i<k;i++){
-                         addButtonBottom(res,arrowDown, review.get(i).getRemarque_review_equipe(), 0x5ae29d, true,i,username,id,review.get(i).getId_sprint_review(),img);
-
-                       
-               }
+               
 
         Toolbar tb = getToolbar();
         tb.setTitleCentered(false);
@@ -102,6 +98,44 @@ public class Sprint_review_Form extends SideMenuBaseFormSM{
         
         
 
+        
+        
+        
+        this.getToolbar().addSearchCommand(e -> {
+    String text = (String)e.getSource();
+    if(text == null || text.length() == 0) {
+        // clear search
+        for(Component cmp : this.getContentPane()) {
+            cmp.setHidden(false);
+            cmp.setVisible(true);
+        }
+        this.getContentPane().animateLayout(150);
+    } else {
+        text = text.toLowerCase();
+        for(Component cmp : this.getContentPane()) {
+            MultiButton mb = (MultiButton)cmp;
+            String line1 = mb.getTextLine1();
+            String line2 = mb.getTextLine2();
+            boolean show = line1 != null && line1.toLowerCase().indexOf(text) > -1 ||
+                    line2 != null && line2.toLowerCase().indexOf(text) > -1;
+            mb.setHidden(!show);
+            mb.setVisible(show);
+        }
+        this.getContentPane().animateLayout(150);
+    }
+}, 4);
+
+
+
+for(int i=0;i<k;i++){
+                       this.addButtonBottom(res,arrowDown, review.get(i).getRemarque_review_equipe(), 0x5ae29d, true,i,username,id,review.get(i).getId_sprint_review(),img);
+                       this.show();
+                       
+
+               }
+        
+        
+        
         
         
         Container titleCmp = BoxLayout.encloseY(
@@ -159,7 +193,8 @@ public class Sprint_review_Form extends SideMenuBaseFormSM{
         
         
        
-        add(FlowLayout.encloseIn(finishLandingPage));
+        this.add(finishLandingPage);
+        this.show();
         
     }
      
@@ -243,9 +278,17 @@ public class Sprint_review_Form extends SideMenuBaseFormSM{
 
     @Override
     protected void showForm4(Resources res) {
-       new Sprint_review_Form(res, img1, username1, id1).show();
+                new Sprint_review_Form(res, img1, username1, id1).show();
 
         
+    }
+
+    @Override
+    protected void calendrier(Resources res) {
+    }
+
+    @Override
+    protected void List_demandes(Resources res) {
     }
     
     
